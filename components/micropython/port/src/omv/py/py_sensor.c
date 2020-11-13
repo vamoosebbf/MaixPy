@@ -644,94 +644,94 @@ STATIC MP_DEFINE_CONST_FUN_OBJ_1(py_sensor_set_jpeg_buff_quality_obj, py_sensor_
 STATIC const mp_map_elem_t globals_dict_table[] = {
     {MP_OBJ_NEW_QSTR(MP_QSTR___name__), MP_OBJ_NEW_QSTR(MP_QSTR_sensor)},
     // Pixel format
-    {MP_OBJ_NEW_QSTR(MP_QSTR_BAYER),        MP_OBJ_NEW_SMALL_INT(PIXFORMAT_BAYER)},     /* 1BPP/RAW*/
-    {MP_OBJ_NEW_QSTR(MP_QSTR_RGB565),       MP_OBJ_NEW_SMALL_INT(PIXFORMAT_RGB565)},    /* 2BPP/RGB565*/
-    {MP_OBJ_NEW_QSTR(MP_QSTR_YUV422),       MP_OBJ_NEW_SMALL_INT(PIXFORMAT_YUV422)},    /* 2BPP/YUV422*/
-    {MP_OBJ_NEW_QSTR(MP_QSTR_GRAYSCALE),    MP_OBJ_NEW_SMALL_INT(PIXFORMAT_GRAYSCALE)}, /* 1BPP/GRAYSCALE*/
-    {MP_OBJ_NEW_QSTR(MP_QSTR_JPEG),         MP_OBJ_NEW_SMALL_INT(PIXFORMAT_JPEG)},      /* JPEG/COMPRESSED*/
-    {MP_OBJ_NEW_QSTR(MP_QSTR_OV9650),       MP_OBJ_NEW_SMALL_INT(OV9650_ID)},
-    {MP_OBJ_NEW_QSTR(MP_QSTR_OV2640),       MP_OBJ_NEW_SMALL_INT(OV2640_ID)},
-    {MP_OBJ_NEW_QSTR(MP_QSTR_OV7725),       MP_OBJ_NEW_SMALL_INT(OV7725_ID)},
-    {MP_OBJ_NEW_QSTR(MP_QSTR_MT9V034),      MP_OBJ_NEW_SMALL_INT(MT9V034_ID)},
-    {MP_OBJ_NEW_QSTR(MP_QSTR_LEPTON),       MP_OBJ_NEW_SMALL_INT(LEPTON_ID)},
+    {MP_OBJ_NEW_QSTR(MP_QSTR_BAYER), MP_OBJ_NEW_SMALL_INT(PIXFORMAT_BAYER)},         /* 1BPP/RAW*/
+    {MP_OBJ_NEW_QSTR(MP_QSTR_RGB565), MP_OBJ_NEW_SMALL_INT(PIXFORMAT_RGB565)},       /* 2BPP/RGB565*/
+    {MP_OBJ_NEW_QSTR(MP_QSTR_YUV422), MP_OBJ_NEW_SMALL_INT(PIXFORMAT_YUV422)},       /* 2BPP/YUV422*/
+    {MP_OBJ_NEW_QSTR(MP_QSTR_GRAYSCALE), MP_OBJ_NEW_SMALL_INT(PIXFORMAT_GRAYSCALE)}, /* 1BPP/GRAYSCALE*/
+    {MP_OBJ_NEW_QSTR(MP_QSTR_JPEG), MP_OBJ_NEW_SMALL_INT(PIXFORMAT_JPEG)},           /* JPEG/COMPRESSED*/
+    {MP_OBJ_NEW_QSTR(MP_QSTR_OV9650), MP_OBJ_NEW_SMALL_INT(OV9650_ID)},
+    {MP_OBJ_NEW_QSTR(MP_QSTR_OV2640), MP_OBJ_NEW_SMALL_INT(OV2640_ID)},
+    {MP_OBJ_NEW_QSTR(MP_QSTR_OV7725), MP_OBJ_NEW_SMALL_INT(OV7725_ID)},
+    {MP_OBJ_NEW_QSTR(MP_QSTR_MT9V034), MP_OBJ_NEW_SMALL_INT(MT9V034_ID)},
+    {MP_OBJ_NEW_QSTR(MP_QSTR_LEPTON), MP_OBJ_NEW_SMALL_INT(LEPTON_ID)},
 
     // Special effects
-    {MP_OBJ_NEW_QSTR(MP_QSTR_NORMAL),       MP_OBJ_NEW_SMALL_INT(SDE_NORMAL)},      /* Normal/No SDE */
-    {MP_OBJ_NEW_QSTR(MP_QSTR_NEGATIVE),     MP_OBJ_NEW_SMALL_INT(SDE_NEGATIVE)},    /* Negative image */
+    {MP_OBJ_NEW_QSTR(MP_QSTR_NORMAL), MP_OBJ_NEW_SMALL_INT(SDE_NORMAL)},     /* Normal/No SDE */
+    {MP_OBJ_NEW_QSTR(MP_QSTR_NEGATIVE), MP_OBJ_NEW_SMALL_INT(SDE_NEGATIVE)}, /* Negative image */
 
     // C/SIF Resolutions
-    {MP_OBJ_NEW_QSTR(MP_QSTR_QQCIF),        MP_OBJ_NEW_SMALL_INT(FRAMESIZE_QQCIF)},     /* 88x72     */
-    {MP_OBJ_NEW_QSTR(MP_QSTR_QCIF),         MP_OBJ_NEW_SMALL_INT(FRAMESIZE_QCIF)},      /* 176x144   */
-    {MP_OBJ_NEW_QSTR(MP_QSTR_CIF),          MP_OBJ_NEW_SMALL_INT(FRAMESIZE_CIF)},       /* 352x288   */
-    {MP_OBJ_NEW_QSTR(MP_QSTR_QQSIF),        MP_OBJ_NEW_SMALL_INT(FRAMESIZE_QQSIF)},     /* 88x60     */
-    {MP_OBJ_NEW_QSTR(MP_QSTR_QSIF),         MP_OBJ_NEW_SMALL_INT(FRAMESIZE_QSIF)},      /* 176x120   */
-    {MP_OBJ_NEW_QSTR(MP_QSTR_SIF),          MP_OBJ_NEW_SMALL_INT(FRAMESIZE_SIF)},       /* 352x240   */
+    {MP_OBJ_NEW_QSTR(MP_QSTR_QQCIF), MP_OBJ_NEW_SMALL_INT(FRAMESIZE_QQCIF)}, /* 88x72     */
+    {MP_OBJ_NEW_QSTR(MP_QSTR_QCIF), MP_OBJ_NEW_SMALL_INT(FRAMESIZE_QCIF)},   /* 176x144   */
+    {MP_OBJ_NEW_QSTR(MP_QSTR_CIF), MP_OBJ_NEW_SMALL_INT(FRAMESIZE_CIF)},     /* 352x288   */
+    {MP_OBJ_NEW_QSTR(MP_QSTR_QQSIF), MP_OBJ_NEW_SMALL_INT(FRAMESIZE_QQSIF)}, /* 88x60     */
+    {MP_OBJ_NEW_QSTR(MP_QSTR_QSIF), MP_OBJ_NEW_SMALL_INT(FRAMESIZE_QSIF)},   /* 176x120   */
+    {MP_OBJ_NEW_QSTR(MP_QSTR_SIF), MP_OBJ_NEW_SMALL_INT(FRAMESIZE_SIF)},     /* 352x240   */
     // VGA Resolutions
-    {MP_OBJ_NEW_QSTR(MP_QSTR_QQQQVGA),      MP_OBJ_NEW_SMALL_INT(FRAMESIZE_QQQQVGA)},   /* 40x30     */
-    {MP_OBJ_NEW_QSTR(MP_QSTR_QQQVGA),       MP_OBJ_NEW_SMALL_INT(FRAMESIZE_QQQVGA)},    /* 80x60     */
-    {MP_OBJ_NEW_QSTR(MP_QSTR_QQVGA),        MP_OBJ_NEW_SMALL_INT(FRAMESIZE_QQVGA)},     /* 160x120   */
-    {MP_OBJ_NEW_QSTR(MP_QSTR_QVGA),         MP_OBJ_NEW_SMALL_INT(FRAMESIZE_QVGA)},      /* 320x240   */
-    {MP_OBJ_NEW_QSTR(MP_QSTR_VGA),          MP_OBJ_NEW_SMALL_INT(FRAMESIZE_VGA)},       /* 640x480   */
-    {MP_OBJ_NEW_QSTR(MP_QSTR_HQQQVGA),      MP_OBJ_NEW_SMALL_INT(FRAMESIZE_HQQQVGA)},   /* 80x40     */
-    {MP_OBJ_NEW_QSTR(MP_QSTR_HQQVGA),       MP_OBJ_NEW_SMALL_INT(FRAMESIZE_HQQVGA)},    /* 160x80    */
-    {MP_OBJ_NEW_QSTR(MP_QSTR_HQVGA),        MP_OBJ_NEW_SMALL_INT(FRAMESIZE_HQVGA)},     /* 240x160   */
+    {MP_OBJ_NEW_QSTR(MP_QSTR_QQQQVGA), MP_OBJ_NEW_SMALL_INT(FRAMESIZE_QQQQVGA)}, /* 40x30     */
+    {MP_OBJ_NEW_QSTR(MP_QSTR_QQQVGA), MP_OBJ_NEW_SMALL_INT(FRAMESIZE_QQQVGA)},   /* 80x60     */
+    {MP_OBJ_NEW_QSTR(MP_QSTR_QQVGA), MP_OBJ_NEW_SMALL_INT(FRAMESIZE_QQVGA)},     /* 160x120   */
+    {MP_OBJ_NEW_QSTR(MP_QSTR_QVGA), MP_OBJ_NEW_SMALL_INT(FRAMESIZE_QVGA)},       /* 320x240   */
+    {MP_OBJ_NEW_QSTR(MP_QSTR_VGA), MP_OBJ_NEW_SMALL_INT(FRAMESIZE_VGA)},         /* 640x480   */
+    {MP_OBJ_NEW_QSTR(MP_QSTR_HQQQVGA), MP_OBJ_NEW_SMALL_INT(FRAMESIZE_HQQQVGA)}, /* 80x40     */
+    {MP_OBJ_NEW_QSTR(MP_QSTR_HQQVGA), MP_OBJ_NEW_SMALL_INT(FRAMESIZE_HQQVGA)},   /* 160x80    */
+    {MP_OBJ_NEW_QSTR(MP_QSTR_HQVGA), MP_OBJ_NEW_SMALL_INT(FRAMESIZE_HQVGA)},     /* 240x160   */
     // FFT Resolutions
-    {MP_OBJ_NEW_QSTR(MP_QSTR_B64X32),       MP_OBJ_NEW_SMALL_INT(FRAMESIZE_64X32)},     /* 64x32     */
-    {MP_OBJ_NEW_QSTR(MP_QSTR_B64X64),       MP_OBJ_NEW_SMALL_INT(FRAMESIZE_64X64)},     /* 64x64     */
-    {MP_OBJ_NEW_QSTR(MP_QSTR_B128X64),      MP_OBJ_NEW_SMALL_INT(FRAMESIZE_128X64)},    /* 128x64    */
-    {MP_OBJ_NEW_QSTR(MP_QSTR_B128X128),     MP_OBJ_NEW_SMALL_INT(FRAMESIZE_128X128)},   /* 128x128   */
-    {MP_OBJ_NEW_QSTR(MP_QSTR_B240X240),     MP_OBJ_NEW_SMALL_INT(FRAMESIZE_240X240)},   /* 240x240   */
+    {MP_OBJ_NEW_QSTR(MP_QSTR_B64X32), MP_OBJ_NEW_SMALL_INT(FRAMESIZE_64X32)},     /* 64x32     */
+    {MP_OBJ_NEW_QSTR(MP_QSTR_B64X64), MP_OBJ_NEW_SMALL_INT(FRAMESIZE_64X64)},     /* 64x64     */
+    {MP_OBJ_NEW_QSTR(MP_QSTR_B128X64), MP_OBJ_NEW_SMALL_INT(FRAMESIZE_128X64)},   /* 128x64    */
+    {MP_OBJ_NEW_QSTR(MP_QSTR_B128X128), MP_OBJ_NEW_SMALL_INT(FRAMESIZE_128X128)}, /* 128x128   */
+    {MP_OBJ_NEW_QSTR(MP_QSTR_B240X240), MP_OBJ_NEW_SMALL_INT(FRAMESIZE_240X240)}, /* 240x240   */
     // Other
-    {MP_OBJ_NEW_QSTR(MP_QSTR_LCD),          MP_OBJ_NEW_SMALL_INT(FRAMESIZE_LCD)},       /* 128x160   */
-    {MP_OBJ_NEW_QSTR(MP_QSTR_QQVGA2),       MP_OBJ_NEW_SMALL_INT(FRAMESIZE_QQVGA2)},    /* 128x160   */
-    {MP_OBJ_NEW_QSTR(MP_QSTR_WVGA),         MP_OBJ_NEW_SMALL_INT(FRAMESIZE_WVGA)},      /* 720x480   */
-    {MP_OBJ_NEW_QSTR(MP_QSTR_WVGA2),        MP_OBJ_NEW_SMALL_INT(FRAMESIZE_WVGA2)},     /* 752x480   */
-    {MP_OBJ_NEW_QSTR(MP_QSTR_SVGA),         MP_OBJ_NEW_SMALL_INT(FRAMESIZE_SVGA)},      /* 800x600   */
-    {MP_OBJ_NEW_QSTR(MP_QSTR_SXGA),         MP_OBJ_NEW_SMALL_INT(FRAMESIZE_SXGA)},      /* 1280x1024 */
-    {MP_OBJ_NEW_QSTR(MP_QSTR_UXGA),         MP_OBJ_NEW_SMALL_INT(FRAMESIZE_UXGA)},      /* 1600x1200 */
+    {MP_OBJ_NEW_QSTR(MP_QSTR_LCD), MP_OBJ_NEW_SMALL_INT(FRAMESIZE_LCD)},       /* 128x160   */
+    {MP_OBJ_NEW_QSTR(MP_QSTR_QQVGA2), MP_OBJ_NEW_SMALL_INT(FRAMESIZE_QQVGA2)}, /* 128x160   */
+    {MP_OBJ_NEW_QSTR(MP_QSTR_WVGA), MP_OBJ_NEW_SMALL_INT(FRAMESIZE_WVGA)},     /* 720x480   */
+    {MP_OBJ_NEW_QSTR(MP_QSTR_WVGA2), MP_OBJ_NEW_SMALL_INT(FRAMESIZE_WVGA2)},   /* 752x480   */
+    {MP_OBJ_NEW_QSTR(MP_QSTR_SVGA), MP_OBJ_NEW_SMALL_INT(FRAMESIZE_SVGA)},     /* 800x600   */
+    {MP_OBJ_NEW_QSTR(MP_QSTR_SXGA), MP_OBJ_NEW_SMALL_INT(FRAMESIZE_SXGA)},     /* 1280x1024 */
+    {MP_OBJ_NEW_QSTR(MP_QSTR_UXGA), MP_OBJ_NEW_SMALL_INT(FRAMESIZE_UXGA)},     /* 1600x1200 */
 
     // Sensor functions
 
-    {MP_OBJ_NEW_QSTR(MP_QSTR_binocular_reset),      (mp_obj_t)&py_binocular_sensor_reset_obj},
-    {MP_OBJ_NEW_QSTR(MP_QSTR_reset),                (mp_obj_t)&py_sensor_reset_obj},
-    {MP_OBJ_NEW_QSTR(MP_QSTR_deinit),               (mp_obj_t)&py_sensor_deinit_obj},
-    {MP_OBJ_NEW_QSTR(MP_QSTR_sleep),                (mp_obj_t)&py_sensor_sleep_obj},
-    {MP_OBJ_NEW_QSTR(MP_QSTR_shutdown),             (mp_obj_t)&py_sensor_shutdown_obj},
-    {MP_OBJ_NEW_QSTR(MP_QSTR_flush),                (mp_obj_t)&py_sensor_flush_obj},
-    {MP_OBJ_NEW_QSTR(MP_QSTR_snapshot),             (mp_obj_t)&py_sensor_snapshot_obj},
-    {MP_OBJ_NEW_QSTR(MP_QSTR_skip_frames),          (mp_obj_t)&py_sensor_skip_frames_obj},
-    {MP_OBJ_NEW_QSTR(MP_QSTR_width),                (mp_obj_t)&py_sensor_width_obj},
-    {MP_OBJ_NEW_QSTR(MP_QSTR_height),               (mp_obj_t)&py_sensor_height_obj},
-    {MP_OBJ_NEW_QSTR(MP_QSTR_get_fb),               (mp_obj_t)&py_sensor_get_fb_obj},
-    {MP_OBJ_NEW_QSTR(MP_QSTR_get_id),               (mp_obj_t)&py_sensor_get_id_obj},
+    {MP_OBJ_NEW_QSTR(MP_QSTR_binocular_reset), (mp_obj_t)&py_binocular_sensor_reset_obj},
+    {MP_OBJ_NEW_QSTR(MP_QSTR_reset), (mp_obj_t)&py_sensor_reset_obj},
+    {MP_OBJ_NEW_QSTR(MP_QSTR_deinit), (mp_obj_t)&py_sensor_deinit_obj},
+    {MP_OBJ_NEW_QSTR(MP_QSTR_sleep), (mp_obj_t)&py_sensor_sleep_obj},
+    {MP_OBJ_NEW_QSTR(MP_QSTR_shutdown), (mp_obj_t)&py_sensor_shutdown_obj},
+    {MP_OBJ_NEW_QSTR(MP_QSTR_flush), (mp_obj_t)&py_sensor_flush_obj},
+    {MP_OBJ_NEW_QSTR(MP_QSTR_snapshot), (mp_obj_t)&py_sensor_snapshot_obj},
+    {MP_OBJ_NEW_QSTR(MP_QSTR_skip_frames), (mp_obj_t)&py_sensor_skip_frames_obj},
+    {MP_OBJ_NEW_QSTR(MP_QSTR_width), (mp_obj_t)&py_sensor_width_obj},
+    {MP_OBJ_NEW_QSTR(MP_QSTR_height), (mp_obj_t)&py_sensor_height_obj},
+    {MP_OBJ_NEW_QSTR(MP_QSTR_get_fb), (mp_obj_t)&py_sensor_get_fb_obj},
+    {MP_OBJ_NEW_QSTR(MP_QSTR_get_id), (mp_obj_t)&py_sensor_get_id_obj},
     // { MP_OBJ_NEW_QSTR(MP_QSTR_alloc_extra_fb),      (mp_obj_t)&py_sensor_alloc_extra_fb_obj },
     // { MP_OBJ_NEW_QSTR(MP_QSTR_dealloc_extra_fb),    (mp_obj_t)&py_sensor_dealloc_extra_fb_obj },
-    {MP_OBJ_NEW_QSTR(MP_QSTR_set_pixformat),        (mp_obj_t)&py_sensor_set_pixformat_obj},
-    {MP_OBJ_NEW_QSTR(MP_QSTR_set_framerate),        (mp_obj_t)&py_sensor_set_framerate_obj},
-    {MP_OBJ_NEW_QSTR(MP_QSTR_set_framesize),        (mp_obj_t)&py_sensor_set_framesize_obj},
-    {MP_OBJ_NEW_QSTR(MP_QSTR_set_windowing),        (mp_obj_t)&py_sensor_set_windowing_obj},
-    {MP_OBJ_NEW_QSTR(MP_QSTR_set_gainceiling),      (mp_obj_t)&py_sensor_set_gainceiling_obj},
-    {MP_OBJ_NEW_QSTR(MP_QSTR_set_contrast),         (mp_obj_t)&py_sensor_set_contrast_obj},
-    {MP_OBJ_NEW_QSTR(MP_QSTR_set_brightness),       (mp_obj_t)&py_sensor_set_brightness_obj},
-    {MP_OBJ_NEW_QSTR(MP_QSTR_set_saturation),       (mp_obj_t)&py_sensor_set_saturation_obj},
+    {MP_OBJ_NEW_QSTR(MP_QSTR_set_pixformat), (mp_obj_t)&py_sensor_set_pixformat_obj},
+    {MP_OBJ_NEW_QSTR(MP_QSTR_set_framerate), (mp_obj_t)&py_sensor_set_framerate_obj},
+    {MP_OBJ_NEW_QSTR(MP_QSTR_set_framesize), (mp_obj_t)&py_sensor_set_framesize_obj},
+    {MP_OBJ_NEW_QSTR(MP_QSTR_set_windowing), (mp_obj_t)&py_sensor_set_windowing_obj},
+    {MP_OBJ_NEW_QSTR(MP_QSTR_set_gainceiling), (mp_obj_t)&py_sensor_set_gainceiling_obj},
+    {MP_OBJ_NEW_QSTR(MP_QSTR_set_contrast), (mp_obj_t)&py_sensor_set_contrast_obj},
+    {MP_OBJ_NEW_QSTR(MP_QSTR_set_brightness), (mp_obj_t)&py_sensor_set_brightness_obj},
+    {MP_OBJ_NEW_QSTR(MP_QSTR_set_saturation), (mp_obj_t)&py_sensor_set_saturation_obj},
     // { MP_OBJ_NEW_QSTR(MP_QSTR_set_quality),         (mp_obj_t)&py_sensor_set_quality_obj },
-    {MP_OBJ_NEW_QSTR(MP_QSTR_set_colorbar),         (mp_obj_t)&py_sensor_set_colorbar_obj},
-    {MP_OBJ_NEW_QSTR(MP_QSTR_set_auto_gain),        (mp_obj_t)&py_sensor_set_auto_gain_obj},
-    {MP_OBJ_NEW_QSTR(MP_QSTR_get_gain_db),          (mp_obj_t)&py_sensor_get_gain_db_obj},
-    {MP_OBJ_NEW_QSTR(MP_QSTR_set_auto_exposure),    (mp_obj_t)&py_sensor_set_auto_exposure_obj},
-    {MP_OBJ_NEW_QSTR(MP_QSTR_get_exposure_us),      (mp_obj_t)&py_sensor_get_exposure_us_obj},
-    {MP_OBJ_NEW_QSTR(MP_QSTR_set_auto_whitebal),    (mp_obj_t)&py_sensor_set_auto_whitebal_obj},
-    {MP_OBJ_NEW_QSTR(MP_QSTR_get_rgb_gain_db),      (mp_obj_t)&py_sensor_get_rgb_gain_db_obj},
-    {MP_OBJ_NEW_QSTR(MP_QSTR_set_hmirror),          (mp_obj_t)&py_sensor_set_hmirror_obj},
-    {MP_OBJ_NEW_QSTR(MP_QSTR_set_vflip),            (mp_obj_t)&py_sensor_set_vflip_obj},
-    {MP_OBJ_NEW_QSTR(MP_QSTR_set_special_effect),   (mp_obj_t)&py_sensor_set_special_effect_obj},
-    {MP_OBJ_NEW_QSTR(MP_QSTR_set_lens_correction),  (mp_obj_t)&py_sensor_set_lens_correction_obj},
-    {MP_OBJ_NEW_QSTR(MP_QSTR_run),                  (mp_obj_t)&py_sensor_run_obj},
-    {MP_OBJ_NEW_QSTR(MP_QSTR_flush),                (mp_obj_t)&py_sensor_flush_obj},
-    {MP_OBJ_NEW_QSTR(MP_QSTR___write_reg),          (mp_obj_t)&py_sensor_write_reg_obj},
-    {MP_OBJ_NEW_QSTR(MP_QSTR___read_reg),           (mp_obj_t)&py_sensor_read_reg_obj},
+    {MP_OBJ_NEW_QSTR(MP_QSTR_set_colorbar), (mp_obj_t)&py_sensor_set_colorbar_obj},
+    {MP_OBJ_NEW_QSTR(MP_QSTR_set_auto_gain), (mp_obj_t)&py_sensor_set_auto_gain_obj},
+    {MP_OBJ_NEW_QSTR(MP_QSTR_get_gain_db), (mp_obj_t)&py_sensor_get_gain_db_obj},
+    {MP_OBJ_NEW_QSTR(MP_QSTR_set_auto_exposure), (mp_obj_t)&py_sensor_set_auto_exposure_obj},
+    {MP_OBJ_NEW_QSTR(MP_QSTR_get_exposure_us), (mp_obj_t)&py_sensor_get_exposure_us_obj},
+    {MP_OBJ_NEW_QSTR(MP_QSTR_set_auto_whitebal), (mp_obj_t)&py_sensor_set_auto_whitebal_obj},
+    {MP_OBJ_NEW_QSTR(MP_QSTR_get_rgb_gain_db), (mp_obj_t)&py_sensor_get_rgb_gain_db_obj},
+    {MP_OBJ_NEW_QSTR(MP_QSTR_set_hmirror), (mp_obj_t)&py_sensor_set_hmirror_obj},
+    {MP_OBJ_NEW_QSTR(MP_QSTR_set_vflip), (mp_obj_t)&py_sensor_set_vflip_obj},
+    {MP_OBJ_NEW_QSTR(MP_QSTR_set_special_effect), (mp_obj_t)&py_sensor_set_special_effect_obj},
+    {MP_OBJ_NEW_QSTR(MP_QSTR_set_lens_correction), (mp_obj_t)&py_sensor_set_lens_correction_obj},
+    {MP_OBJ_NEW_QSTR(MP_QSTR_run), (mp_obj_t)&py_sensor_run_obj},
+    {MP_OBJ_NEW_QSTR(MP_QSTR_flush), (mp_obj_t)&py_sensor_flush_obj},
+    {MP_OBJ_NEW_QSTR(MP_QSTR___write_reg), (mp_obj_t)&py_sensor_write_reg_obj},
+    {MP_OBJ_NEW_QSTR(MP_QSTR___read_reg), (mp_obj_t)&py_sensor_read_reg_obj},
 #if !defined(OMV_MINIMUM) || CONFIG_MAIXPY_IDE_SUPPORT
-    {MP_OBJ_NEW_QSTR(MP_QSTR_set_jb_quality),       (mp_obj_t)&py_sensor_set_jpeg_buff_quality_obj},
+    {MP_OBJ_NEW_QSTR(MP_QSTR_set_jb_quality), (mp_obj_t)&py_sensor_set_jpeg_buff_quality_obj},
 #endif
 };
 
@@ -739,5 +739,5 @@ STATIC MP_DEFINE_CONST_DICT(globals_dict, globals_dict_table);
 
 const mp_obj_module_t sensor_module = {
     .base = {&mp_type_module},
-    .globals =          (mp_obj_t)&globals_dict,
+    .globals = (mp_obj_t)&globals_dict,
 };

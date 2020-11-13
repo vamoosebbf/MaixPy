@@ -67,7 +67,13 @@ if(CONFIG_COMPONENT_MICROPYTHON_ENABLE)
     append_srcs_dir(MPY_PORT_SRCS "port/src/standard_lib/network")
     append_srcs_dir(MPY_PORT_SRCS "port/src/standard_lib/network/esp32")
     append_srcs_dir(MPY_PORT_SRCS "port/src/standard_lib/network/esp8285")
+    append_srcs_dir(MPY_PORT_SRCS "port/src/standard_lib/network/wiznet5k")
+    append_srcs_dir(MPY_PORT_SRCS "port/src/standard_lib/network/wiznet5k/w5500")
+    append_srcs_dir(MPY_PORT_SRCS "port/src/standard_lib/network/wiznet5k/dns")
+    append_srcs_dir(MPY_PORT_SRCS "port/src/standard_lib/network/wiznet5k/dhcp")
+
     append_srcs_dir(MPY_PORT_SRCS "port/src/standard_lib/socket")
+
     append_srcs_dir(MPY_PORT_SRCS "port/src/standard_lib/uos")
     append_srcs_dir(MPY_PORT_SRCS "port/src/standard_lib/utime")
 

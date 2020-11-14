@@ -289,8 +289,9 @@ int8_t WIZCHIP_EXPORT(listen)(uint8_t sn)
    return SOCK_OK;
 }
 
-int8_t WIZCHIP_EXPORT(connect)(uint8_t sn, uint8_t *addr, uint16_t port)
+int8_t WIZCHIP_EXPORT(connect)(uint8_t sn, uint8_t *addr, uint16_t port, float timeout)
 {
+   mp_uint_t start_time = mp_hal_ticks_ms();
    CHECK_SOCKNUM();
    CHECK_SOCKMODE(Sn_MR_TCP);
    CHECK_SOCKINIT();
@@ -313,7 +314,13 @@ int8_t WIZCHIP_EXPORT(connect)(uint8_t sn, uint8_t *addr, uint16_t port)
    setSn_DPORT(sn, port);
    setSn_CR(sn, Sn_CR_CONNECT);
    while (getSn_CR(sn))
-      ;
+   {
+      if (mp_hal_ticks_ms() - start_time > ((uint32_t)timeout * 1000))
+      {
+         return -MP_ETIMEDOUT;
+      }
+   }
+      
    if (sock_io_mode & (1 << sn))
       return SOCK_BUSY;
    while (getSn_SR(sn) != SOCK_ESTABLISHED)
@@ -321,7 +328,7 @@ int8_t WIZCHIP_EXPORT(connect)(uint8_t sn, uint8_t *addr, uint16_t port)
       if (getSn_IR(sn) & Sn_IR_TIMEOUT)
       {
          setSn_IR(sn, Sn_IR_TIMEOUT);
-         return SOCKERR_TIMEOUT;
+         return -MP_ETIMEDOUT;
       }
 
       if (getSn_SR(sn) == SOCK_CLOSED)
@@ -339,8 +346,8 @@ int8_t WIZCHIP_EXPORT(disconnect)(uint8_t sn)
    CHECK_SOCKMODE(Sn_MR_TCP);
    setSn_CR(sn, Sn_CR_DISCON);
    /* wait to process the command... */
-   while (getSn_CR(sn))
-      ;
+   while (getSn_CR(sn));
+
    sock_is_sending &= ~(1 << sn);
    if (sock_io_mode & (1 << sn))
       return SOCK_BUSY;
@@ -350,14 +357,15 @@ int8_t WIZCHIP_EXPORT(disconnect)(uint8_t sn)
       {
          WIZCHIP_EXPORT(close)
          (sn);
-         return SOCKERR_TIMEOUT;
+         return -MP_ETIMEDOUT;
       }
    }
    return SOCK_OK;
 }
 
-int32_t WIZCHIP_EXPORT(send)(uint8_t sn, uint8_t *buf, uint16_t len)
+int32_t WIZCHIP_EXPORT(send)(uint8_t sn, uint8_t *buf, uint16_t len, float timeout)
 {
+   mp_uint_t start_time = mp_hal_ticks_ms();
    uint8_t tmp = 0;
    uint16_t freesize = 0;
 
@@ -390,7 +398,7 @@ int32_t WIZCHIP_EXPORT(send)(uint8_t sn, uint8_t *buf, uint16_t len)
       {
          WIZCHIP_EXPORT(close)
          (sn);
-         return SOCKERR_TIMEOUT;
+         return -MP_ETIMEDOUT;
       }
       else
          return SOCK_BUSY;
@@ -412,6 +420,10 @@ int32_t WIZCHIP_EXPORT(send)(uint8_t sn, uint8_t *buf, uint16_t len)
          return SOCK_BUSY;
       if (len <= freesize)
          break;
+      if (mp_hal_ticks_ms() - start_time > ((uint32_t)timeout * 1000))
+      {
+         return -MP_ETIMEDOUT;
+      }
    }
    wiz_send_data(sn, buf, len);
 #if _WIZCHIP_ == 5200
@@ -425,15 +437,21 @@ int32_t WIZCHIP_EXPORT(send)(uint8_t sn, uint8_t *buf, uint16_t len)
    setSn_CR(sn, Sn_CR_SEND);
    /* wait to process the command... */
    while (getSn_CR(sn))
-      ;
+   {
+      if (mp_hal_ticks_ms() - start_time > ((uint32_t)timeout * 1000))
+      {
+         return -MP_ETIMEDOUT;
+      }
+   }
    sock_is_sending |= (1 << sn);
    //M20150409 : Explicit Type Casting
    //return len;
    return (int32_t)len;
 }
 
-int32_t WIZCHIP_EXPORT(recv)(uint8_t sn, uint8_t *buf, uint16_t len)
+int32_t WIZCHIP_EXPORT(recv)(uint8_t sn, uint8_t *buf, uint16_t len, float timeout)
 {
+   mp_uint_t start_time = mp_hal_ticks_ms();
    uint8_t tmp = 0;
    uint16_t recvsize = 0;
 //A20150601 : For integarating with W5300
@@ -485,6 +503,11 @@ int32_t WIZCHIP_EXPORT(recv)(uint8_t sn, uint8_t *buf, uint16_t len)
             return SOCK_BUSY;
          if (recvsize != 0)
             break;
+         if (mp_hal_ticks_ms() - start_time > ((uint32_t)timeout * 1000))
+         {
+            return -MP_ETIMEDOUT;
+         }
+
       };
 #if _WIZCHIP_ == 5300
    }
@@ -541,8 +564,15 @@ int32_t WIZCHIP_EXPORT(recv)(uint8_t sn, uint8_t *buf, uint16_t len)
       len = recvsize;
    wiz_recv_data(sn, buf, len);
    setSn_CR(sn, Sn_CR_RECV);
+
    while (getSn_CR(sn))
-      ;
+   {
+      if (mp_hal_ticks_ms() - start_time > ((uint32_t)timeout * 1000))
+      {
+         return -MP_ETIMEDOUT;
+      }
+
+   }
 #endif
 
    //M20150409 : Explicit Type Casting
@@ -550,8 +580,9 @@ int32_t WIZCHIP_EXPORT(recv)(uint8_t sn, uint8_t *buf, uint16_t len)
    return (int32_t)len;
 }
 
-int32_t WIZCHIP_EXPORT(sendto)(uint8_t sn, uint8_t *buf, uint16_t len, uint8_t *addr, uint16_t port)
+int32_t WIZCHIP_EXPORT(sendto)(uint8_t sn, uint8_t *buf, uint16_t len, uint8_t *addr, uint16_t port, float timeout)
 {
+   mp_uint_t start_time = mp_hal_ticks_ms();
    uint8_t tmp = 0;
    uint16_t freesize = 0;
    uint32_t taddr;
@@ -569,7 +600,6 @@ int32_t WIZCHIP_EXPORT(sendto)(uint8_t sn, uint8_t *buf, uint16_t len, uint8_t *
    default:
       return SOCKERR_SOCKMODE;
    }
-   printf("send2\r\n");
 
    CHECK_SOCKDATA();
    //M20140501 : For avoiding fatal error on memory align mismatched
@@ -585,11 +615,9 @@ int32_t WIZCHIP_EXPORT(sendto)(uint8_t sn, uint8_t *buf, uint16_t len, uint8_t *
    //if(*((uint32_t*)addr) == 0) return SOCKERR_IPINVALID;
    if ((taddr == 0) && ((getSn_MR(sn) & Sn_MR_MACRAW) != Sn_MR_MACRAW))
       return SOCKERR_IPINVALID;
-   printf("send3\r\n");
 
    if ((port == 0) && ((getSn_MR(sn) & Sn_MR_MACRAW) != Sn_MR_MACRAW))
       return SOCKERR_PORTZERO;
-   printf("send4\r\n");
 
    tmp = getSn_SR(sn);
    //#if ( _WIZCHIP_ < 5200 )
@@ -598,7 +626,6 @@ int32_t WIZCHIP_EXPORT(sendto)(uint8_t sn, uint8_t *buf, uint16_t len, uint8_t *
    //#else
    //   if(tmp != SOCK_MACRAW && tmp != SOCK_UDP) return SOCKERR_SOCKSTATUS;
    //#endif
-   printf("send1\r\n");
    setSn_DIPR(sn, addr);
    setSn_DPORT(sn, port);
    freesize = getSn_TxMAX(sn);
@@ -609,14 +636,18 @@ int32_t WIZCHIP_EXPORT(sendto)(uint8_t sn, uint8_t *buf, uint16_t len, uint8_t *
       freesize = getSn_TX_FSR(sn);
       if (getSn_SR(sn) == SOCK_CLOSED)
          return SOCKERR_SOCKCLOSED;
-      printf("send5\r\n");
 
       if ((sock_io_mode & (1 << sn)) && (len > freesize))
          return SOCK_BUSY;
-      printf("send6\r\n");
 
       if (len <= freesize)
          break;
+
+      if (mp_hal_ticks_ms() - start_time > ((uint32_t)timeout * 1000))
+      {
+         // printf("timeout:%f, %d\r\n",timeout,((uint32_t)timeout * 1000));
+         return -MP_ETIMEDOUT;
+      }
    };
    wiz_send_data(sn, buf, len);
 
@@ -639,7 +670,13 @@ int32_t WIZCHIP_EXPORT(sendto)(uint8_t sn, uint8_t *buf, uint16_t len, uint8_t *
    setSn_CR(sn, Sn_CR_SEND);
    /* wait to process the command... */
    while (getSn_CR(sn))
-      ;
+   {
+      if (mp_hal_ticks_ms() - start_time > ((uint32_t)timeout * 1000))
+      {
+         return -MP_ETIMEDOUT;
+      }
+
+   }
    while (1)
    {
       tmp = getSn_IR(sn);
@@ -649,31 +686,31 @@ int32_t WIZCHIP_EXPORT(sendto)(uint8_t sn, uint8_t *buf, uint16_t len, uint8_t *
          break;
       }
       //M:20131104
-      //else if(tmp & Sn_IR_TIMEOUT) return SOCKERR_TIMEOUT;
+      //else if(tmp & Sn_IR_TIMEOUT) return -MP_ETIMEDOUT;
       else if (tmp & Sn_IR_TIMEOUT)
       {
          setSn_IR(sn, Sn_IR_TIMEOUT);
 //M20150409 : Fixed the lost of sign bits by type casting.
-//len = (uint16_t)SOCKERR_TIMEOUT;
+//len = (uint16_t)-MP_ETIMEDOUT;
 //break;
 #if _WIZCHIP_ < 5500 //M20150401 : for WIZCHIP Errata #4, #5 (ARP errata)
          if (taddr)
             setSUBR((uint8_t *)&taddr);
 #endif
-         return SOCKERR_TIMEOUT;
+         return -MP_ETIMEDOUT;
       }
       ////////////
    }
 #if _WIZCHIP_ < 5500 //M20150401 : for WIZCHIP Errata #4, #5 (ARP errata)
    if (taddr)
       setSUBR((uint8_t *)&taddr);
-#endif
+#endif   
    //M20150409 : Explicit Type Casting
    //return len;
    return (int32_t)len;
 }
 
-int32_t WIZCHIP_EXPORT(recvfrom)(uint8_t sn, uint8_t *buf, uint16_t len, uint8_t *addr, uint16_t *port, uint32_t timeout, int *_errno)
+int32_t WIZCHIP_EXPORT(recvfrom)(uint8_t sn, uint8_t *buf, uint16_t len, uint8_t *addr, uint16_t *port, float timeout)
 {
    mp_uint_t start_time = mp_hal_ticks_ms();
 //M20150601 : For W5300
@@ -721,13 +758,11 @@ int32_t WIZCHIP_EXPORT(recvfrom)(uint8_t sn, uint8_t *buf, uint16_t len, uint8_t
             break;
          if (mp_hal_ticks_ms() - start_time > ((uint32_t)timeout * 1000))
          {
-            // *_errno = MP_ETIMEDOUT;
-            // return MP_STREAM_ERROR;
-            return pack_len;
+            // printf("timeout:%f, %d, %d, %d\r\n",timeout,((uint32_t)timeout * 1000),mp_hal_ticks_ms(),start_time);
+            return -MP_ETIMEDOUT;
          }
       };
    }
-   printf("1: %d,%d,%d,%d\r\n", pack_len, sock_io_mode, sn, mr);
    //D20150601 : Move it to bottom
    // sock_pack_info[sn] = PACK_COMPLETED;
    switch (mr & 0x07)
@@ -735,15 +770,13 @@ int32_t WIZCHIP_EXPORT(recvfrom)(uint8_t sn, uint8_t *buf, uint16_t len, uint8_t
    case Sn_MR_UDP:
       if (sock_remained_size[sn] == 0)
       {
-         printf("IN UDP\r\n");
          wiz_recv_data(sn, head, 8);
          setSn_CR(sn, Sn_CR_RECV);
          while (getSn_CR(sn))
          {
             if (mp_hal_ticks_ms() - start_time > ((uint32_t)timeout * 1000))
             {
-               *_errno = MP_ETIMEDOUT;
-               return MP_STREAM_ERROR;
+               return -MP_ETIMEDOUT;
             }
          }
 
@@ -780,13 +813,11 @@ int32_t WIZCHIP_EXPORT(recvfrom)(uint8_t sn, uint8_t *buf, uint16_t len, uint8_t
       if (len < sock_remained_size[sn])
       {
          pack_len = len;
-         printf("2: %d,%d,%d\r\n", pack_len, sock_io_mode, sn);
       }
       else
       {
 
          pack_len = sock_remained_size[sn];
-         printf("3: %d,%d,%d\r\n", pack_len, sock_io_mode, sn);
       }
 
       //A20150601 : For W5300
@@ -814,8 +845,7 @@ int32_t WIZCHIP_EXPORT(recvfrom)(uint8_t sn, uint8_t *buf, uint16_t len, uint8_t
          {
             if (mp_hal_ticks_ms() - start_time > ((uint32_t)timeout * 1000))
             {
-               *_errno = MP_ETIMEDOUT;
-               return MP_STREAM_ERROR;
+               return -MP_ETIMEDOUT;
             }
          }
 
@@ -852,8 +882,7 @@ int32_t WIZCHIP_EXPORT(recvfrom)(uint8_t sn, uint8_t *buf, uint16_t len, uint8_t
          {
             if (mp_hal_ticks_ms() - start_time > ((uint32_t)timeout * 1000))
             {
-               *_errno = MP_ETIMEDOUT;
-               return MP_STREAM_ERROR;
+               return -MP_ETIMEDOUT;
             }
          }
 
@@ -888,8 +917,7 @@ int32_t WIZCHIP_EXPORT(recvfrom)(uint8_t sn, uint8_t *buf, uint16_t len, uint8_t
    {
       if (mp_hal_ticks_ms() - start_time > ((uint32_t)timeout * 1000))
       {
-         *_errno = MP_ETIMEDOUT;
-         return MP_STREAM_ERROR;
+         return -MP_ETIMEDOUT;
       }
    }
 
@@ -1003,7 +1031,7 @@ int8_t WIZCHIP_EXPORT(setsockopt)(uint8_t sn, sockopt_type sotype, void *arg)
          if (getSn_IR(sn) & Sn_IR_TIMEOUT)
          {
             setSn_IR(sn, Sn_IR_TIMEOUT);
-            return SOCKERR_TIMEOUT;
+            return -MP_ETIMEDOUT;
          }
       }
       break;

@@ -189,7 +189,7 @@ STATIC int wiznet5k_socket_listen(mod_network_socket_obj_t *socket, mp_int_t bac
     {
         wiznet5k_socket_close(socket);
         *_errno = -ret;
-        return -1;
+        return MP_STREAM_ERROR;
     }
     return 0;
 }
@@ -230,7 +230,7 @@ STATIC int wiznet5k_socket_accept(mod_network_socket_obj_t *socket, mod_network_
         {
             wiznet5k_socket_close(socket);
             *_errno = MP_ENOTCONN; // ??
-            return -1;
+            return MP_STREAM_ERROR;
         }
         mp_hal_delay_ms(1);
     }
@@ -241,19 +241,19 @@ STATIC int wiznet5k_socket_connect(mod_network_socket_obj_t *socket, byte *ip, m
     // use "bind" function to open the socket in client mode
     if (wiznet5k_socket_bind(socket, ip, 0, _errno) != 0)
     {
-        return -1;
+        return MP_STREAM_ERROR;
     }
 
     // now connect
     MP_THREAD_GIL_EXIT();
-    mp_int_t ret = WIZCHIP_EXPORT(connect)(socket->u_param.fileno, ip, port);
+    mp_int_t ret = WIZCHIP_EXPORT(connect)(socket->u_param.fileno, ip, port,socket->timeout);
     MP_THREAD_GIL_ENTER();
 
     if (ret < 0)
     {
-        wiznet5k_socket_close(socket);
+        // wiznet5k_socket_close(socket);
         *_errno = -ret;
-        return -1;
+        return MP_STREAM_ERROR;
     }
 
     // success
@@ -263,15 +263,15 @@ STATIC int wiznet5k_socket_connect(mod_network_socket_obj_t *socket, byte *ip, m
 STATIC mp_uint_t wiznet5k_socket_send(mod_network_socket_obj_t *socket, const byte *buf, mp_uint_t len, int *_errno)
 {
     MP_THREAD_GIL_EXIT();
-    mp_int_t ret = WIZCHIP_EXPORT(send)(socket->u_param.fileno, (byte *)buf, len);
+    mp_int_t ret = WIZCHIP_EXPORT(send)(socket->u_param.fileno, (byte *)buf, len, socket->timeout);
     MP_THREAD_GIL_ENTER();
 
     // TODO convert Wiz errno's to POSIX ones
     if (ret < 0)
     {
-        wiznet5k_socket_close(socket);
+        // wiznet5k_socket_close(socket);
         *_errno = -ret;
-        return -1;
+        return MP_STREAM_ERROR;
     }
     return ret;
 }
@@ -279,15 +279,15 @@ STATIC mp_uint_t wiznet5k_socket_send(mod_network_socket_obj_t *socket, const by
 STATIC mp_uint_t wiznet5k_socket_recv(mod_network_socket_obj_t *socket, byte *buf, mp_uint_t len, int *_errno)
 {
     MP_THREAD_GIL_EXIT();
-    mp_int_t ret = WIZCHIP_EXPORT(recv)(socket->u_param.fileno, buf, len);
+    mp_int_t ret = WIZCHIP_EXPORT(recv)(socket->u_param.fileno, buf, len, socket->timeout);
     MP_THREAD_GIL_ENTER();
 
     // TODO convert Wiz errno's to POSIX ones
     if (ret < 0)
     {
-        wiznet5k_socket_close(socket);
+        // wiznet5k_socket_close(socket);
         *_errno = -ret;
-        return -1;
+        return MP_STREAM_ERROR;
     }
     return ret;
 }
@@ -304,14 +304,14 @@ STATIC mp_uint_t wiznet5k_socket_sendto(mod_network_socket_obj_t *socket, const 
     }
 
     MP_THREAD_GIL_EXIT();
-    mp_int_t ret = WIZCHIP_EXPORT(sendto)(socket->u_param.fileno, (byte *)buf, len, ip, port);
+    mp_int_t ret = WIZCHIP_EXPORT(sendto)(socket->u_param.fileno, (byte *)buf, len, ip, port, socket->timeout);
     MP_THREAD_GIL_ENTER();
 
     if (ret < 0)
     {
-        wiznet5k_socket_close(socket);
+        // wiznet5k_socket_close(socket);
         *_errno = -ret;
-        return -1;
+        return MP_STREAM_ERROR;
     }
     return ret;
 }
@@ -320,17 +320,15 @@ STATIC mp_uint_t wiznet5k_socket_recvfrom(mod_network_socket_obj_t *socket, byte
 {
     uint16_t port2;
     MP_THREAD_GIL_EXIT();
-    printf("before wiznet5k_socket_recvfrom\r\n");
     setSn_MR(wiznet5k_obj.socket_used, (socket->u_param.type | (0 & 0xF0)));
-    mp_int_t ret = WIZCHIP_EXPORT(recvfrom)(socket->u_param.fileno, buf, len, ip, &port2, socket->timeout, _errno);
-    printf("wiznet5k_socket_recvfrom: %d\r\n", ret);
+    mp_int_t ret = WIZCHIP_EXPORT(recvfrom)(socket->u_param.fileno, buf, len, ip, &port2, socket->timeout);
     MP_THREAD_GIL_ENTER();
     *port = port2;
     if (ret < 0)
     {
         // wiznet5k_socket_close(socket);
         *_errno = -ret;
-        return -1;
+        return MP_STREAM_ERROR;
     }
     return ret;
 }
@@ -344,6 +342,7 @@ STATIC int wiznet5k_socket_setsockopt(mod_network_socket_obj_t *socket, mp_uint_
 
 STATIC int wiznet5k_socket_settimeout(mod_network_socket_obj_t *socket, mp_uint_t timeout_ms, int *_errno)
 {
+    printf("wiznet timeout\r\n");
     // TODO
     *_errno = MP_EINVAL;
     return -1;

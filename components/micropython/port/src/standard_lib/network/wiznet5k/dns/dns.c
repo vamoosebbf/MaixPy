@@ -89,8 +89,6 @@
 #define DGAIN 4	 /* Mean deviation gain = 1/4 */
 #define LDGAIN 2 /* log2(DGAIN) */
 
-STATIC int dns_timeout = 5;
-
 /* Header for all domain messages */
 struct dhdr
 {
@@ -538,7 +536,7 @@ int8_t DNS_run(uint8_t *dns_ip, uint8_t *name, uint8_t *ip_from_dns)
 
 	len = dns_makequery(0, (char *)name, pDNSMSG, MAX_DNS_BUF_SIZE);
 	WIZCHIP_EXPORT(sendto)
-	(DNS_SOCKET, pDNSMSG, len, dns_ip, IPPORT_DOMAIN);
+	(DNS_SOCKET, pDNSMSG, len, dns_ip, IPPORT_DOMAIN, DNS_WAIT_TIME);
 
 	while (1)
 	{
@@ -546,7 +544,7 @@ int8_t DNS_run(uint8_t *dns_ip, uint8_t *name, uint8_t *ip_from_dns)
 		{
 			if (len > MAX_DNS_BUF_SIZE)
 				len = MAX_DNS_BUF_SIZE;
-			len = WIZCHIP_EXPORT(recvfrom)(DNS_SOCKET, pDNSMSG, len, ip, &port, dns_timeout, &errno);
+			len = WIZCHIP_EXPORT(recvfrom)(DNS_SOCKET, pDNSMSG, len, ip, &port, DNS_WAIT_TIME);
 #ifdef _DNS_DEBUG_
 			printf("> Receive DNS message from %d.%d.%d.%d(%d). len = %d\r\n", ip[0], ip[1], ip[2], ip[3], port, len);
 #endif
@@ -571,7 +569,7 @@ int8_t DNS_run(uint8_t *dns_ip, uint8_t *name, uint8_t *ip_from_dns)
 			printf("> DNS Timeout\r\n");
 #endif
 			WIZCHIP_EXPORT(sendto)
-			(DNS_SOCKET, pDNSMSG, len, dns_ip, IPPORT_DOMAIN);
+			(DNS_SOCKET, pDNSMSG, len, dns_ip, IPPORT_DOMAIN, DNS_WAIT_TIME);
 		}
 	}
 	WIZCHIP_EXPORT(close)

@@ -212,7 +212,7 @@ int8_t  WIZCHIP_EXPORT(listen)(uint8_t sn);
  *                @ref SOCKERR_TIMEOUT   - Timeout occurred during request connection\n
  *                @ref SOCK_BUSY         - In non-block io mode, it returned immediately\n
  */
-int8_t  WIZCHIP_EXPORT(connect)(uint8_t sn, uint8_t * addr, uint16_t port);
+int8_t  WIZCHIP_EXPORT(connect)(uint8_t sn, uint8_t * addr, uint16_t port, float timeout);
 
 /**
  * @ingroup WIZnet_socket_APIs
@@ -249,7 +249,7 @@ int8_t  WIZCHIP_EXPORT(disconnect)(uint8_t sn);
  *                          @ref SOCKERR_DATALEN    - zero data length \n
  *                          @ref SOCK_BUSY          - Socket is busy.
  */
-int32_t WIZCHIP_EXPORT(send)(uint8_t sn, uint8_t * buf, uint16_t len);
+int32_t WIZCHIP_EXPORT(send)(uint8_t sn, uint8_t * buf, uint16_t len, float timeout);
 
 /**
  * @ingroup WIZnet_socket_APIs
@@ -271,7 +271,7 @@ int32_t WIZCHIP_EXPORT(send)(uint8_t sn, uint8_t * buf, uint16_t len);
  *                     @ref SOCKERR_DATALEN    - zero data length \n
  *                     @ref SOCK_BUSY          - Socket is busy.
  */
-int32_t WIZCHIP_EXPORT(recv)(uint8_t sn, uint8_t * buf, uint16_t len);
+int32_t WIZCHIP_EXPORT(recv)(uint8_t sn, uint8_t * buf, uint16_t len, float timeout);
 
 /**
  * @ingroup WIZnet_socket_APIs
@@ -299,7 +299,7 @@ int32_t WIZCHIP_EXPORT(recv)(uint8_t sn, uint8_t * buf, uint16_t len);
  *                        @ref SOCKERR_TIMEOUT     - Timeout occurred \n
  *                        @ref SOCK_BUSY           - Socket is busy. 
  */
-int32_t WIZCHIP_EXPORT(sendto)(uint8_t sn, uint8_t * buf, uint16_t len, uint8_t * addr, uint16_t port);
+int32_t WIZCHIP_EXPORT(sendto)(uint8_t sn, uint8_t * buf, uint16_t len, uint8_t * addr, uint16_t port, float timeout);
 
 /**
  * @ingroup WIZnet_socket_APIs
@@ -329,7 +329,7 @@ int32_t WIZCHIP_EXPORT(sendto)(uint8_t sn, uint8_t * buf, uint16_t len, uint8_t 
  *                       @ref SOCKERR_SOCKNUM    - Invalid socket number \n
  *                       @ref SOCKBUSY           - Socket is busy.
  */
-int32_t WIZCHIP_EXPORT(recvfrom)(uint8_t sn, uint8_t * buf, uint16_t len, uint8_t * addr, uint16_t *port,uint32_t timeout,int *_errno);
+int32_t WIZCHIP_EXPORT(recvfrom)(uint8_t sn, uint8_t * buf, uint16_t len, uint8_t * addr, uint16_t *port, float timeout);
 
 
 /////////////////////////////

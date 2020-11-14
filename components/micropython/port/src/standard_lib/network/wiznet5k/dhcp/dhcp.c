@@ -411,7 +411,7 @@ void send_DHCP_DISCOVER(void)
 #endif
 
 	WIZCHIP_EXPORT(sendto)
-	(DHCP_SOCKET, (uint8_t *)pDHCPMSG, RIP_MSG_SIZE, ip, DHCP_SERVER_PORT);
+	(DHCP_SOCKET, (uint8_t *)pDHCPMSG, RIP_MSG_SIZE, ip, DHCP_SERVER_PORT, DHCP_WAIT_TIME);
 }
 
 /* SEND DHCP REQUEST */
@@ -511,7 +511,7 @@ void send_DHCP_REQUEST(void)
 #endif
 
 	WIZCHIP_EXPORT(sendto)
-	(DHCP_SOCKET, (uint8_t *)pDHCPMSG, RIP_MSG_SIZE, ip, DHCP_SERVER_PORT);
+	(DHCP_SOCKET, (uint8_t *)pDHCPMSG, RIP_MSG_SIZE, ip, DHCP_SERVER_PORT, DHCP_WAIT_TIME);
 }
 
 /* SEND DHCP DHCPDECLINE */
@@ -573,7 +573,7 @@ void send_DHCP_DECLINE(void)
 #endif
 
 	WIZCHIP_EXPORT(sendto)
-	(DHCP_SOCKET, (uint8_t *)pDHCPMSG, RIP_MSG_SIZE, ip, DHCP_SERVER_PORT);
+	(DHCP_SOCKET, (uint8_t *)pDHCPMSG, RIP_MSG_SIZE, ip, DHCP_SERVER_PORT, DHCP_WAIT_TIME);
 }
 
 /* PARSE REPLY pDHCPMSG */
@@ -591,7 +591,7 @@ int8_t parseDHCPMSG(void)
 
 	if ((len = getSn_RX_RSR(DHCP_SOCKET)) > 0)
 	{
-		len = WIZCHIP_EXPORT(recvfrom)(DHCP_SOCKET, (uint8_t *)pDHCPMSG, len, svr_addr, &svr_port, DHCP_WAIT_TIME, &errno);
+		len = WIZCHIP_EXPORT(recvfrom)(DHCP_SOCKET, (uint8_t *)pDHCPMSG, len, svr_addr, &svr_port, DHCP_WAIT_TIME);
 #ifdef _DHCP_DEBUG_
 		printf("DHCP message : %d.%d.%d.%d(%d) %d received. \r\n", svr_addr[0], svr_addr[1], svr_addr[2], svr_addr[3], svr_port, len);
 #endif
@@ -933,7 +933,7 @@ int8_t check_DHCP_leasedIP(void)
 
 	// IP conflict detection : ARP request - ARP reply
 	// Broadcasting ARP Request for check the IP conflict using UDP sendto() function
-	ret = WIZCHIP_EXPORT(sendto)(DHCP_SOCKET, (uint8_t *)"CHECK_IP_CONFLICT", 17, DHCP_allocated_ip, 5000);
+	ret = WIZCHIP_EXPORT(sendto)(DHCP_SOCKET, (uint8_t *)"CHECK_IP_CONFLICT", 17, DHCP_allocated_ip, 5000, DHCP_WAIT_TIME);
 
 	// RCR value restore
 	setRCR(tmp);

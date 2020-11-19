@@ -80,138 +80,66 @@ typedef enum _soft_i2c_device_number
 }
 
 STATIC int mp_hal_i2c_scl_release(machine_hard_i2c_obj_t *self) {
-    GPIOHS_OUT_HIGH(self->pin_scl);
-    return 0; // success
-    /* 
      uint32_t count = self->timeout;
 
-    // mp_hal_pin_od_high(self->pin_scl);
-    gpiohs_set_drive_mode(self->pin_scl, GPIO_DM_OUTPUT);
-    gpiohs_set_pin(self->pin_scl, 1);
-
+    
+    GPIOHS_OUT_HIGH(self->pin_scl);
     mp_hal_i2c_delay(self);
-    // For clock stretching, wait for the SCL pin to be released, with timeout.
-    gpiohs_set_drive_mode(self->pin_scl, GPIO_DM_INPUT);
 
-    // for (; mp_hal_pin_read(self->pin_scl) == 0 && count; --count) {
-    for (; gpiohs_get_pin(self->pin_scl) == 0 && count; --count) {
 
-        mp_hal_delay_us_fast(1);
+    for (; GET_GPIOHS_VALX(self->pin_scl) == 0 && count; --count) {
+        usleep(1);
     }
     if (count == 0) {
         return -MP_ETIMEDOUT;
     }
     return 0; // success
-    */
 }
 
 STATIC void mp_hal_i2c_scl_low(machine_hard_i2c_obj_t *self) {
     GPIOHS_OUT_LOW(self->pin_scl);
-    // mp_hal_pin_od_low(self->pin_scl);
-
-    // gpiohs_set_drive_mode(self->pin_scl, GPIO_DM_OUTPUT);
-    // gpiohs_set_pin(self->pin_scl, 0);
 }
 
 STATIC void mp_hal_i2c_sda_low(machine_hard_i2c_obj_t *self) {
     GPIOHS_OUT_LOW(self->pin_sda);
-    // mp_hal_pin_od_low(self->pin_sda);
-    // gpiohs_set_pin(self->pin_sda, 0);
-    // gpiohs_set_drive_mode(self->pin_sda, GPIO_DM_OUTPUT);
 }
 
 STATIC void mp_hal_i2c_sda_release(machine_hard_i2c_obj_t *self) {
     GPIOHS_OUT_HIGH(self->pin_sda);
-    // mp_hal_pin_od_high(self->pin_sda);
-    // gpiohs_set_pin(self->pin_sda, 1);
-    // gpiohs_set_drive_mode(self->pin_sda, GPIO_DM_OUTPUT);
-    // gpiohs_set_drive_mode(self->pin_sda, GPIO_DM_INPUT);
 }
 
 STATIC int mp_hal_i2c_sda_read(machine_hard_i2c_obj_t *self) {
     return GET_GPIOHS_VALX(self->pin_sda);
-    // gpiohs_set_drive_mode(self->pin_sda, GPIO_DM_INPUT);
-    // return gpiohs_get_pin(self->pin_sda);
-    // return mp_hal_pin_read(self->pin_sda);
 }
 
 STATIC int mp_hal_i2c_start(machine_hard_i2c_obj_t *self) {
-    gpiohs_set_drive_mode(self->pin_sda, GPIO_DM_OUTPUT);
     mp_hal_i2c_sda_release(self);
-    mp_hal_i2c_scl_release(self);
     mp_hal_i2c_delay(self);
+    int ret = mp_hal_i2c_scl_release(self);
+    if (ret != 0) {
+        return ret;
+    }
     mp_hal_i2c_sda_low(self);
     mp_hal_i2c_delay(self);
-    mp_hal_i2c_scl_low(self);
-    return 0; // success
-
-//   mp_hal_i2c_sda_release(self);
-//     mp_hal_i2c_delay(self);
-//     int ret = mp_hal_i2c_scl_release(self);
-//     if (ret != 0) {
-//         return ret;
-//     }
-//     mp_hal_i2c_sda_low(self);
-//     mp_hal_i2c_delay(self);
-//  return 0; //success
+ return 0; //success
 }
 
 STATIC int mp_hal_i2c_stop(machine_hard_i2c_obj_t *self) {
-    gpiohs_set_drive_mode(self->pin_sda, GPIO_DM_OUTPUT);
-    mp_hal_i2c_scl_low(self);
+    mp_hal_i2c_delay(self);
     mp_hal_i2c_sda_low(self);
     mp_hal_i2c_delay(self);
-    mp_hal_i2c_scl_release(self);
-    mp_hal_i2c_delay(self);
+    int ret = mp_hal_i2c_scl_release(self);
     mp_hal_i2c_sda_release(self);
-    return 0;
-
-    //   mp_hal_i2c_delay(self);
-    // mp_hal_i2c_sda_low(self);
-    // mp_hal_i2c_delay(self);
-    // int ret = mp_hal_i2c_scl_release(self);
-    // mp_hal_i2c_sda_release(self);
-    // mp_hal_i2c_delay(self);
-    // return ret;
+    mp_hal_i2c_delay(self);
+    return ret;
 }
 
 STATIC int mp_hal_i2c_write_byte(machine_hard_i2c_obj_t *self, uint8_t val) {
-    int ucErrTime = 0;
-    gpiohs_set_drive_mode(self->pin_sda, GPIO_DM_OUTPUT);
+    mp_hal_i2c_delay(self);
     mp_hal_i2c_scl_low(self);
-    for (int i = 7; i >= 0; i--) {
+
+    for (int i = 7; i >= 0; --i) {
         ((val >> i) & 1) ? mp_hal_i2c_sda_release(self) : mp_hal_i2c_sda_low(self);
-        mp_hal_i2c_delay(self);
-        mp_hal_i2c_scl_release(self);
-        mp_hal_i2c_delay(self);
-        mp_hal_i2c_scl_low(self);
-    }
-
-    gpiohs_set_drive_mode(self->pin_sda, GPIO_DM_INPUT);
-    mp_hal_i2c_sda_release(self);
-    mp_hal_i2c_delay(self);
-    mp_hal_i2c_scl_release(self);
-
-    // wait ack
-    while(mp_hal_i2c_sda_read(self)) {
-		ucErrTime++;
-		if(ucErrTime>250) {
-			return 1;
-		}
-	} 
-    mp_hal_i2c_delay(self);
-    mp_hal_i2c_scl_low(self);
-    return 0;
-
-    /*mp_hal_i2c_delay(self);
-    mp_hal_i2c_scl_low(self);
-
-    for (int i = 7; i >= 0; i--) {
-        if ((val >> i) & 1) {
-            mp_hal_i2c_sda_release(self);
-        } else {
-            mp_hal_i2c_sda_low(self);
-        }
         mp_hal_i2c_delay(self);
         int ret = mp_hal_i2c_scl_release(self);
         if (ret != 0) {
@@ -233,34 +161,14 @@ STATIC int mp_hal_i2c_write_byte(machine_hard_i2c_obj_t *self, uint8_t val) {
     mp_hal_i2c_delay(self);
     mp_hal_i2c_scl_low(self);
     
-    return ack;*/
+    return ack;
 }
 
 STATIC int mp_hal_i2c_read_byte(machine_hard_i2c_obj_t *self, uint8_t *val, int nack) {
+    mp_hal_i2c_delay(self);
+    mp_hal_i2c_scl_low(self);
+    mp_hal_i2c_delay(self);
     gpiohs_set_drive_mode(self->pin_sda, GPIO_DM_INPUT);
-    uint8_t data = 0;
-    mp_hal_i2c_scl_low(self);
-    mp_hal_i2c_delay(self);
-    for (int i = 7; i >= 0; i--) {
-        mp_hal_i2c_scl_release(self);
-        mp_hal_i2c_delay(self);
-        data = (data << 1) | mp_hal_i2c_sda_read(self);
-        mp_hal_i2c_scl_low(self);
-        mp_hal_i2c_delay(self);
-    }
-    *val = data;
-
-    gpiohs_set_drive_mode(self->pin_sda, GPIO_DM_OUTPUT);
-    // send ack/nack bit
-    nack ? mp_hal_i2c_sda_release(self) : mp_hal_i2c_sda_low(self);
-    mp_hal_i2c_scl_release(self);
-    mp_hal_i2c_delay(self);
-    mp_hal_i2c_scl_low(self);
-    return 0; // success
-
-    /*mp_hal_i2c_delay(self);
-    mp_hal_i2c_scl_low(self);
-    mp_hal_i2c_delay(self);
     uint8_t data = 0;
     for (int i = 7; i >= 0; i--) {
         int ret = mp_hal_i2c_scl_release(self);
@@ -285,7 +193,7 @@ STATIC int mp_hal_i2c_read_byte(machine_hard_i2c_obj_t *self, uint8_t *val, int 
     }
     mp_hal_i2c_scl_low(self);
     mp_hal_i2c_sda_release(self);
-    return 0; // success*/
+    return 0; // success
 }
 
 int mp_machine_soft_i2c_transfer(mp_obj_base_t *self_in, uint16_t addr, size_t n, mp_machine_i2c_buf_t *bufs, unsigned int flags) {
@@ -691,16 +599,19 @@ STATIC mp_obj_t machine_i2c_init_helper(machine_hard_i2c_obj_t* self, mp_uint_t 
                 self->us_delay = 1;
             }
         }
+        printf("self->us_delay: %d\r\n",self->us_delay);
         // mp_hal_pin_open_drain(self->scl);
         // mp_hal_pin_open_drain(self->sda);
         // GPIO_DM_OUTPUT
         fpioa_set_function(self->pin_scl, FUNC_GPIOHS0 + self->pin_scl); 
-        gpiohs_set_pin(self->pin_scl, 1);
-        gpiohs_set_drive_mode(self->pin_scl, GPIO_DM_OUTPUT);
+        gpiohs_set_pin(self->pin_scl, 0);
+        // gpiohs_set_drive_mode(self->pin_scl, GPIO_DM_OUTPUT);
         
         fpioa_set_function(self->pin_sda, FUNC_GPIOHS0 + self->pin_sda);
-        gpiohs_set_pin(self->pin_sda, 1);
-        gpiohs_set_drive_mode(self->pin_sda, GPIO_DM_OUTPUT);
+        // gpiohs_set_pin(self->pin_sda, 1);
+        // gpiohs_set_drive_mode(self->pin_sda, GPIO_DM_OUTPUT);
+        gpiohs->input_en.u32[0] |= ((uint32_t)1 << self->pin_sda);
+        gpiohs->output_en.u32[0] |= ((uint32_t)1 << self->pin_scl);
         
         mp_hal_i2c_stop(self); // ignore error
 #endif
